@@ -2,7 +2,7 @@
 
 In order to be considered for the Front-end developer, you must complete the following steps.
 
-Note: This task should take no longer than 1-2 hours at the most.
+Note: This task should take no longer than 3-4 hours at the most.
 
 ### Prerequisites
 
