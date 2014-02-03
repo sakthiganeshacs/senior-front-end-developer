@@ -1,0 +1,175 @@
+Case 1)
+   
+        
+Test Description:  
+         
+*To verify if the active user functionality works proper, all the active user should get displayed in the 'Active Users'  
+Dropdown list when logging in as a different user.
+
+
+Expected Result:
+          
+*All the active user should be listed and displayed under "Active User" dropdown list.
+
+Actual Result:  As expected.
+
+Status: Pass
+
+
+Case 2) 
+     
+
+* To verify the display of inactive users functionality if working fine or not.
+
+Expected Result: 
+
+*The active user when he becomes inactive, moved out of the chat message webpage should get marked and displayed as  
+Inactive in the chat webpage.
+
+Actual Result:  As expected.
+
+Status: Pass
+
+
+Case 3)
+
+
+Test Description:
+       To verify the change in status of a user when he become offline from active.
+
+Expected result:
+       The user when closes the browser from active status should get displayed as 
+Offline for other logged in users.
+
+Actual Result:  As expected.
+
+Status: Pass
+
+
+Case 4)
+
+
+Test Description:
+       To verify the change in status of a user when he goes inactive from active.
+
+Expected result:
+       The user when navigates from the browser his active status should get changed and displayed as 
+Inactive for other logged in users.
+
+Actual Result:  As expected.
+
+Status: Pass
+
+Case 5)
+
+
+Test Description:
+       To verify the entire message sent by a client is displayed without any changes to all the other logged in users.
+
+Expected Result:
+       Content message should be received by all active users as send by the originating client.
+
+Actual Result: As expected.
+
+Status: Pass
+
+Case 6)
+
+
+Test Description:
+    To verify the message is not displayed for the originating client.
+
+Expected result:
+      The user when sends message it should not get displayed in his chat webpage.
+
+Actual Result:  As expected.
+
+Status: Pass
+
+
+Case 7)
+
+
+Test Description:
+       To verify the change in status of a user when he becomes active.
+
+Expected result:
+       The user when logged in web chat he should get displayed in active status in all other logged in users.
+
+Actual Result:
+      As expected
+
+Status: Pass.
+
+
+
+Case 8)
+
+
+Test Description:
+       when the message send by the client it should be displayed with the 
+client id for the reference.
+
+Expected Result:
+       When the client sends any message it was displayed to the other 
+user with the id (username).
+
+Actual Result:
+       AS expected 
+
+Status:  Pass.
+
+Case 9)
+
+
+Test Description:
+       when the message send by the client it should accept any format and
+display the same.
+
+Expected Result:
+       When the client sends any message (alpha, numeric and special char) 
+it was displayed to the other user as is.
+
+Actual Result:
+       AS expected 
+
+Status:  Pass.
+
+
+Case 10)
+
+Test Description:
+       when the message sent by multiple clients it should be displayed with 
+proper division for all the messages.
+
+
+Expected Result:
+      There should be a division displayed for each message send by different 
+client.
+
+Actual Result:
+       AS expected 
+
+Status:  Pass.
+
+Note: The design is made based on assumption that the sender would not be able to see his own message.
+
+The testing has also been approached based on the same assumption.
+
+Offline status will be shown only the server get refreshed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,240 @@
+<html>
+    <head>
+        <script src="socket.io/lib/socket.io.js"></script>
+        <script type="text/javascript">
+			//Create Module level variables
+			var serverAddress = '127.0.0.1:3000';
+			var socketio = io.connect(serverAddress);
+			var clientid = 0;
+			var clientName = "";
+			
+			//Method to generate Client id
+			socketio.on('connect', function (conn) {
+				clientid = Math.floor(Math.random() * 1000);
+			});
+			
+			//Method to send message to client
+			socketio.on("send_message_to_client", function (data) {
+				if(document.getElementById("inputName").value != data['clientname']) {
+					document.getElementById("chatText").innerHTML = ("<hr/>" + data['clientname'] + " : " + 
+					data['message'] + document.getElementById("chatText").innerHTML);
+				}
+			});
+			
+			//Method to update client status
+			socketio.on("send_userstatus_to_client", function (data) {
+				if(data['status'] == 'Offline') {
+					deleteFromList(data);
+				} else {
+					updateList(data);
+				}
+			});
+			
+			//Method to refresh client status
+			socketio.on("refresh_userstatus_to_client", function (datas) {
+				var dataList = datas['list'];
+				refreshList(dataList);
+			});
+			
+			//Method to add items to Users List
+			function addToList(data) {
+				var selectBoxOption = document.createElement("option");
+				selectBoxOption.value = data['clientid'];
+				selectBoxOption.text = data['clientName']+'('+data['status']+')';
+				var htmlSelect = document.getElementById('ActiveUsers');
+				htmlSelect.options.add(selectBoxOption);
+			}
+			
+			//Method to delete items from Users List
+			function deleteFromList(data) {
+				var htmlSelect = document.getElementById('ActiveUsers');
+				var i = 0;
+				for(i= 0;i < htmlSelect.options.length;i++) {
+					if(htmlSelect.options[i].value == data['clientid']) {
+						htmlSelect.options.remove(i);
+					}
+				}
+			}
+			
+			//Method to update items in Users List
+			function updateList(data) {
+				var alreadyAvailableinList = false;
+				var htmlSelect = document.getElementById('ActiveUsers');
+				var i = 0;
+				for(i= 0;i < htmlSelect.options.length;i++) {
+					if(htmlSelect.options[i].value == data['clientid']) {
+						alreadyAvailableinList = true;
+						htmlSelect.options[i].text = data['clientName']+'('+data['status']+')';
+					}
+				}
+				if(alreadyAvailableinList == false) {
+					addToList(data);
+				}
+			}
+			
+			//Method to refresh items in Users List
+			function refreshList(dataList) {
+				var count = 0;
+				var i = 0;
+				var htmlSelect = document.getElementById('ActiveUsers');
+				
+				for(i=htmlSelect.options.length-1;i>=0;i--) {
+					htmlSelect.remove(i);
+				}
+	
+				for(count = 0;count<dataList.length;count++) {
+					addToList(dataList[count]);
+				}
+			}
+			
+			//Method to enable and disable  controls
+			function disableChatControls(value) {
+				document.getElementById("inputText").disabled = value;
+				document.getElementById("btnSend").disabled = value;
+				document.getElementById("chatText").disabled = value;
+			}
+			
+			function disableLoginControls(value) {
+				document.getElementById("inputName").disabled = value;
+				document.getElementById("btnLogin").disabled = value;
+			}
+			
+			//Method to send Message to Server
+			function sendMessage() {
+				var msg = document.getElementById("inputText").value;
+				if("" != msg && 0 < msg.length) {
+					socketio.emit("send_message_to_server", { message : msg, clientid : clientid, clientname : clientName });
+					document.getElementById("inputText").value = "";
+				}
+			}
+			
+			//Method to publish and login Client
+			function PublishClientStatus(status) {
+				clientName = document.getElementById("inputName").value;
+				if("" != clientName && 0 < clientName.length) {
+					disableChatControls(false);
+					disableLoginControls(true);
+					socketio.emit("send_userstatus_to_server", { clientid : clientid, clientName: clientName, status: status });
+				}
+			}
+			
+			//To refresh users status
+			socketio.emit("refresh_userstatus_to_server", null);
+			
+        </script>
+		<style>
+		#tablecontainer
+		{
+		background-color:#f5f5f5;
+		width:50%;
+		height:auto;
+		margin-left:25%;
+		margin-top:12%;
+		 border-radius:10px;
+		 border-width:thick;
+		
+		
+		
+		}
+		
+		#table
+		{
+		  border-spacing:20px;
+		 
+		}
+		
+		 #table tr
+            {
+                 height:35px;}
+		
+		
+		#btnSend,#btnLogin
+		{
+		  
+		 background-color:#696969;
+		 color:White;
+		 width:100px;
+		  height:30px;
+		   border-radius:5px;
+		   display:block;
+		    z-index: 1;
+
+		}
+		#btnSend:hover
+		{
+		background-color:#33bee5;
+		}
+		#btnLogin:hover
+		{
+		background-color:#33bee5;
+		}
+		
+		#inputName,#inputText
+		   {
+              
+              
+    border: 1px solid rgba(255, 255, 255, 0);
+                }
+				
+				
+				
+				
+					
+					
+				
+		
+			
+	</style>
+    </head>
+    <body onfocus="PublishClientStatus('Active')" onblur="PublishClientStatus('InActive')" onunload="PublishClientStatus('Offline')">
+	<table id="tablecontainer" border="0" cellspacing="0">
+<tr>
+<td>
+	<table id="table">
+		<tr>
+			<td width="150">
+				Enter your Name : 
+			</td>
+			<td width="144">
+				<input type="text" id="inputName"/> 
+			</td>
+			<td width="139">
+				<button id="btnLogin" onClick="PublishClientStatus('Active')">Login</button> 
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Text : 
+			</td>
+			<td>
+				<input type="text" id="inputText" disabled="disabled" />
+			</td>
+			<td>
+				<button id="btnSend" onClick="sendMessage()" disabled="disabled">Send</button>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Users List : 
+			</td>
+			<td colspan="2">
+				<select name="ActiveUsers" id="ActiveUsers" size="5" style="height:75px;width:155px">
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3">
+				Message Text :
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3">
+				<div id="chatText" disabled="disabled"></div> 
+			</td>
+		</tr>
+	</table>
+	</td>
+</tr>
+</table>
+    </body>
+</html>
